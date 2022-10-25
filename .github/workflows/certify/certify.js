@@ -8,40 +8,14 @@ const main = async () => {
     const payload = JSON.stringify(github.context.payload, undefined, 2)
     console.log(`The event payload: ${payload}`);
 
-    const protoCerts = core.getInput('audits');
-    console.log(`certs given: ${protoCerts}`);
+    const certs = JSON.parse(core.getInput('audits'));
+    console.log(`certs given: ${certs}`);
     // Setup github/octokit stuff
     const { context = {} } = github;
     const { pull_request } = context.payload;
 
     const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
     const octokit = github.getOctokit(GITHUB_TOKEN);
-
-    // TODO: actually load this from the context somehow?
-    const certs = [
-      {
-        "author": "Aria Beingessner <a.beingessner@gmail.com>",
-        "package": "serde",
-        "version1": "1.0.0",
-        "notes": "Wow cool audit!",
-        "criteria": [
-          "safe-to-run"
-        ],
-        "dependency_criteria": []
-      },
-      {
-        "author": "Aria Beingessner <a.beingessner@gmail.com>",
-        "package": "serde_derive",
-        "version1": "1.1.0",
-        "version2": "1.2.0",
-        "notes": "Wow cool audit2!",
-        "criteria": [
-          "safe-to-deploy",
-          "safe-to-run"
-        ],
-        "dependency_criteria": []
-      }
-    ];
 
     console.log("certifying...");
     // Apply the certifies!

@@ -34,4 +34,4 @@ jobs:
         uses: ./.github/workflows/certify
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          audits: '[{"x": "y", "z": 2}]'
+          audits: $(cat ./.github/workflows/certify/example-certs.json)
