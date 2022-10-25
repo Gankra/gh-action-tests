@@ -1,9 +1,0 @@
-name: Apply Audits
-description: 'Call cargo-vet certify for all the given audits'
-inputs:
-  audits:
-    description: 'audits to certify'
-    required: true
-runs:
-  using: 'node16'
-  main: 'certify.js'
