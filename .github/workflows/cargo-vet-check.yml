@@ -47,11 +47,13 @@ jobs:
           echo "resp = $response"
           
           # Grab the ID from the response and construct the new URL
-          id=$(echo $response | jq '.id')
+          id=$(echo $response | jq -r '.id')
           view_url="${{ env.VET_FAILURE_VIEW_ENDPOINT }}/$id"
+          echo "view_url = $view_url"
           
           # Post a github comment
           message="cargo-vet needs you to audit your dependencies, visit $view_url"
+          echo "posting comment:"
           echo $message | gh pr comment ${{ env.PR }} --body-file -
           
 
