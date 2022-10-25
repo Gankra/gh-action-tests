@@ -30,8 +30,10 @@ jobs:
         run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} --git https://github.com/Gankra/cargo-vet --branch bots cargo-vet
       - name: Invoke cargo-vet
         # Currently emitting a custom output
-        run: cargo vet --locked --output-format=json-full > vet-results.json
-        # run: cargo vet --locked --output-format=json > vet-results.json
+        run: |
+          cargo vet --locked --output-format=json-full > vet-results.json
+          # run: cargo vet --locked --output-format=json > vet-results.json
+          cat vet-results.json
       - if: ${{ failure() && github.event.pull_request.number }}
         name: Report PR Failure
         # TODO: only do this if "Invoke cargo-vet" was the step that failed?
