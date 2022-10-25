@@ -1,7 +1,2 @@
 
 # cargo-vet config file
-
-[[exemptions.serde]]
-version = "1.0.147"
-criteria = "safe-to-deploy"
-
