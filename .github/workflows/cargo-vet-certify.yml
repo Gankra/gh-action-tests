@@ -15,8 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - id: fetch-audits
-    - run: |
-      audits=$(cat ${{ env.EXAMPLE_AUDITS }})
+      run: |
+        audits=$(cat ${{ env.EXAMPLE_AUDITS }})
 
 
   cargo-vet-certify:
