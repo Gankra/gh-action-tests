@@ -4,31 +4,34 @@ on:
   push:
   # pull_request:
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      # - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      # - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      # - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      # - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      # - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      # - name: List files in the repository
-      #  run: |
-      #    ls ${{ github.workspace }}
-      # - run: echo "🍏 This job's status is ${{ job.status }}."
-      - run: echo "${{ github.ref }}"
-      - run: echo "${{ github.repositoryUrl }}"
-      - name: Run Command
-        run: |
-          echo '{"key": 1, "key2": "value"}' > vet-failures.json
-          false
+  cargo-vet:
+      name: Vet Dependencies
+      runs-on: ubuntu-latest
+      env:
+        CARGO_VET_VERSION: 0.3.0
+      steps:
+      - uses: actions/checkout@master
+      - name: Install Rust
+        run: rustup update stable && rustup default stable
+      - uses: actions/cache@v2
+        with:
+          path: ${{ runner.tool_cache }}/cargo-vet
+          key: cargo-vet-bin-${{ env.CARGO_VET_VERSION }}
+      - name: Add the tool cache directory to the search path
+        run: echo "${{ runner.tool_cache }}/cargo-vet/bin" >> $GITHUB_PATH
+      - name: Ensure that the tool cache is populated with the cargo-vet binary
+        # Currently patching in a fork
+        run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} --git https://github.com/Gankra/cargo-vet --branch bots cargo-vet
+      - name: Invoke cargo-vet
+        # Currently emitting a custom output
+        run: cargo vet --locked --output-format=json-full > vet-failures.json
       - if: ${{ failure() }}
         name: Report Failure
         run: |
           gh issue comment 1 --body-file vet-failures.json
+      - if: ${{ failure() }}
+        name: Report Failure
+        run: |
+          vet-failures.json | jq --arg repo ${{ github.repositoryUrl }} --arg pr ${{github.ref}} '. + {repo: $repo, pr: $pr}' | gh issue comment 1 -
 
       
