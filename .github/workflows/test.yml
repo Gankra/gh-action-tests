@@ -1,7 +1,7 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
-  push:
+  # push:
   pull_request:
 jobs:
   cargo-vet:
@@ -10,6 +10,8 @@ jobs:
       env:
         CARGO_VET_VERSION: 0.3.0
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPO: ${{ github.repositoryUrl }}
+        PR: ${{ github.event.pull_request.number }}
       steps:
       - uses: actions/checkout@master
       - name: Install Rust
@@ -31,6 +33,8 @@ jobs:
       - if: ${{ failure() }}
         name: Report Failure
         run: |
-          cat vet-results.json | jq --arg repo ${{ github.repositoryUrl }} --arg pr ${{ github.event.pull_request.number }} '. + {repo: $repo, pr: $pr}' | gh pr comment ${{ github.event.pull_request.number }} --body-file -
+          repo=$(echo ${{ env.REPO }} | sed s,git://github.com/,, | sed s,.git,,)
+          cat vet-results.json | jq --arg repo $repo --arg pr ${{ env.PR }} '. + {repo: $repo, pr: $pr}' | curl -X POST https://cargo-vet.axo.dev/api/webhooks/receive
+          car vet-results.json
 
       
