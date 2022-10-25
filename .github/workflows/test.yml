@@ -2,7 +2,7 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
   push:
-  # pull_request:
+  pull_request:
 jobs:
   cargo-vet:
       name: Vet Dependencies
@@ -31,6 +31,6 @@ jobs:
       - if: ${{ failure() }}
         name: Report Failure
         run: |
-          cat vet-results.json | jq --arg repo ${{ github.repositoryUrl }} --arg pr ${{github.ref}} '. + {repo: $repo, pr: $pr}' | gh issue comment 1 --body-file -
+          cat vet-results.json | jq --arg repo ${{ github.repositoryUrl }} --arg pr ${{ github.event.pull_request.number }} '. + {repo: $repo, pr: $pr}' | gh pr comment ${{ github.event.pull_request.number }} --body-file -
 
       
