@@ -14,6 +14,8 @@ jobs:
         CARGO_VET_VERSION: 0.3.0
         VET_FAILURE_SUBMIT_ENDPOINT: https://cargo-vet.axo.dev/api/webhooks/receive
         VET_FAILURE_VIEW_ENDPOINT: https://cargo-vet.axo.dev/reports
+        VET_RESULTS_FILE: vet-results.json
+        VET_RESULTS_FILE_FINAL: vet-results-final.json
       steps:
       - uses: actions/checkout@master
       - name: Install Rust
@@ -31,9 +33,11 @@ jobs:
       - name: Invoke cargo-vet
         # Currently emitting a custom output
         run: |
-          cargo vet --locked --output-format=json-full > vet-results.json
-          # run: cargo vet --locked --output-format=json > vet-results.json
-          cat vet-results.json
+          cargo vet --locked --output-format=json-full > ${{ env.VET_RESULTS_FILE }}
+          # run: cargo vet --locked --output-format=json > ${{ env.VET_RESULTS_FILE }}
+      - if: ${{ failure() }}
+        name: Log Failure
+        run: cat ${{ env.VET_RESULTS_FILE }}
       - if: ${{ failure() && github.event.pull_request.number }}
         name: Report PR Failure
         # TODO: only do this if "Invoke cargo-vet" was the step that failed?
@@ -45,11 +49,11 @@ jobs:
           echo "repo = $repo"
           
           # Add the repo and PR number to vet's json
-          cat vet-results.json | jq --arg repo $repo --arg pr ${{ github.event.pull_request.number }} '. + {repo: $repo, pr: $pr}' > vet-results-final.json
-          cat vet-results-final.json
+          cat ${{ env.VET_RESULTS_FILE }} | jq --arg repo $repo --arg pr ${{ github.event.pull_request.number }} '. + {repo: $repo, pr: $pr}' > ${{ env.VET_RESULTS_FILE_FINAL }}
+          cat ${{ env.VET_RESULTS_FILE_FINAL }}
           
           # POST this JSON to cargo
-          response=$(cat vet-results-final.json | curl -X POST --data @- ${{ env.VET_FAILURE_SUBMIT_ENDPOINT }})
+          response=$(cat ${{ env.VET_RESULTS_FILE_FINAL }} | curl -X POST --data @- ${{ env.VET_FAILURE_SUBMIT_ENDPOINT }})
           echo "resp = $response"
           
           # Grab the ID from the response and construct the new URL
