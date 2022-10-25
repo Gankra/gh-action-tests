@@ -26,11 +26,11 @@ jobs:
         # run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} --git https://github.com/Gankra/cargo-vet --branch bots cargo-vet
       - name: Invoke cargo-vet
         # Currently emitting a custom output
-        # run: cargo vet --locked --output-format=json-full > vet-failures.json
-        run: cargo vet --locked --output-format=json > vet-failures.json
+        # run: cargo vet --locked --output-format=json-full > vet-results.json
+        run: cargo vet --locked --output-format=json > vet-results.json
       - if: ${{ failure() }}
         name: Report Failure
         run: |
-          vet-failures.json | jq --arg repo ${{ github.repositoryUrl }} --arg pr ${{github.ref}} '. + {repo: $repo, pr: $pr}' | gh issue comment 1 -
+          cat vet-results.json | jq --arg repo ${{ github.repositoryUrl }} --arg pr ${{github.ref}} '. + {repo: $repo, pr: $pr}' | gh issue comment 1 -
 
       
