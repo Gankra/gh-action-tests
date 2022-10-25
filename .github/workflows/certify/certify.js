@@ -8,16 +8,19 @@ const main = async () => {
     const payload = JSON.stringify(github.context.payload, undefined, 2)
     console.log(`The event payload: ${payload}`);
 
+    console.log("a");
     const protoCerts = core.getInput('audits');
     console.log(`certs given: ${protoCerts}`);
-
+    console.log("b");
     // Setup github/octokit stuff
     const { context = {} } = github;
     const { pull_request } = context.payload;
 
+    console.log("c");
     const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
+    console.log("d");
     const octokit = github.getOctokit(GITHUB_TOKEN);
-
+    console.log("e");
 
     // TODO: actually load this from the context somehow?
     const certs = [

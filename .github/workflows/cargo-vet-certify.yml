@@ -30,7 +30,7 @@ jobs:
       #  # run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} cargo-vet
       #  # Currently patching in a fork
       #  run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} --git https://github.com/Gankra/cargo-vet --branch bots cargo-vet
-      - name: Hello world action step
+      - name: Apply New Audits
         uses: ./.github/workflows/certify
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
