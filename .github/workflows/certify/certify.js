@@ -38,7 +38,7 @@ const main = async () => {
           console.log("dependency_criteria not yet supported!");
       }
 
-      args.push("--who", cert.author);
+      args.push("--who", cert.who);
       args.push("--notes", cert.notes);
       // No prompts, the author already signed off!
       args.push("--accept-all");

@@ -1,6 +1,6 @@
 [
     {
-      "author": "Aria Beingessner <a.beingessner@gmail.com>",
+      "who": "Aria Beingessner <a.beingessner@gmail.com>",
       "package": "serde",
       "version1": "1.0.0",
       "notes": "Wow cool audit!",
@@ -10,7 +10,7 @@
       "dependency_criteria": []
     },
     {
-      "author": "Aria Beingessner <a.beingessner@gmail.com>",
+      "who": "Aria Beingessner <a.beingessner@gmail.com>",
       "package": "serde_derive",
       "version1": "1.1.0",
       "version2": "1.2.0",
