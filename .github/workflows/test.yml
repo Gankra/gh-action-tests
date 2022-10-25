@@ -34,7 +34,8 @@ jobs:
         name: Report Failure
         run: |
           repo=$(echo ${{ env.REPO }} | sed s,git://github.com/,, | sed s,.git,,)
-          cat vet-results.json | jq --arg repo $repo --arg pr ${{ env.PR }} '. + {repo: $repo, pr: $pr}' | curl -X POST https://cargo-vet.axo.dev/api/webhooks/receive
-          car vet-results.json
+          echo $repo
+          cat vet-results.json | jq --arg repo $repo --arg pr ${{ env.PR }} '. + {repo: $repo, pr: $pr}' | curl -X POST --data @- https://cargo-vet.axo.dev/api/webhooks/receive
+          cat vet-results.json
 
       
