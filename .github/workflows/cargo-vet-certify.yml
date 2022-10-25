@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@master
     - id: fetch-audits
       run: |
-        audits=$(cat ${{ env.EXAMPLE_AUDITS }} | jq -c .)
+        audits=$(cat ${{ env.EXAMPLE_AUDITS }} | jq -r '. | @base64')
         echo $audits
         echo "audits=$audits" >> $GITHUB_OUTPUT
 
@@ -37,7 +37,8 @@ jobs:
     - name: Log Audits
       run: |
         echo "certifying with these audits:"
-        echo ${{ needs.get-audits.outputs.audits }}
+        decoded=$(echo ${{ needs.get-audits.outputs.audits }} | base64 --decode)
+        echo $decoded
     - uses: actions/checkout@master
     - name: Install Rust
       run: rustup update stable && rustup default stable

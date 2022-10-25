@@ -5,11 +5,17 @@ const exec = require('@actions/exec');
 const main = async () => {
   try {
     // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+    // const payload = JSON.stringify(github.context.payload, undefined, 2)
+    // console.log(`The event payload: ${payload}`);
 
-    const certs = JSON.parse(core.getInput('audits'));
+    // Get the audits we want to certify
+    const certsRaw = core.getInput('audits');
+    console.log(`certs raw: ${certsRaw}`);
+    const certsDecoded = Buffer.from(certsRaw, "base64");
+    console.log(`certs decoded: ${certsDecoded}`);
+    const certs = JSON.parse(certsDecoded);
     console.log(`certs given: ${certs}`);
+
     // Setup github/octokit stuff
     const { context = {} } = github;
     const { pull_request } = context.payload;
