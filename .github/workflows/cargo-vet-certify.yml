@@ -4,28 +4,27 @@ on:
   # pull_request:
 jobs:
   cargo-vet-certify:
-      name: Certify Dependencies
+      name: Vet Dependencies
       runs-on: ubuntu-latest
       env:
-        CARGO_VET_VERSION: 0.3.0
+        # Token required to submit comments on failed PRs
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        REPO: ${{ github.repositoryUrl }}
-        PR: ${{ github.event.pull_request.number }}
-        CERTIFICATIONS: '[{ "author":"Aria Beingessner <a.beingessner@gmail.com>", "package": "serde", "version": "1.0.0", "notes": "Wow cool audit!", "criteria": ["safe-to-run"] }]'
+        CARGO_VET_VERSION: 0.3.0
+        VET_FAILURE_SUBMIT_ENDPOINT: https://cargo-vet.axo.dev/api/webhooks/receive
+        VET_FAILURE_VIEW_ENDPOINT: https://cargo-vet.axo.dev/reports
+        VET_RESULTS_FILE: vet-results.json
+        VET_RESULTS_FILE_FINAL: vet-results-final.json
       steps:
-        - uses: actions/checkout@master
-        - name: Install Rust
-      run: rustup update stable && rustup default stable
-        - uses: actions/cache@v2
-      with:
-        path: ${{ runner.tool_cache }}/cargo-vet
-        key: cargo-vet-bin-${{ env.CARGO_VET_VERSION }}
+      - uses: actions/checkout@master
+      - name: Install Rust
+        run: rustup update stable && rustup default stable
+      - uses: actions/cache@v2
+        with:
+          path: ${{ runner.tool_cache }}/cargo-vet
+          key: cargo-vet-bin-${{ env.CARGO_VET_VERSION }}
       - name: Add the tool cache directory to the search path
         run: echo "${{ runner.tool_cache }}/cargo-vet/bin" >> $GITHUB_PATH
       - name: Ensure that the tool cache is populated with the cargo-vet binary
         # run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} cargo-vet
         # Currently patching in a fork
         run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} --git https://github.com/Gankra/cargo-vet --branch bots cargo-vet
-      - name: Invoke cargo-vet
-        # Currently emitting a custom output
-        run: cargo vet certify
