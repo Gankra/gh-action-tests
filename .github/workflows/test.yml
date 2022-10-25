@@ -1,6 +1,8 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on: 
+  push:
+  # pull_request:
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -20,8 +22,12 @@ jobs:
       # - run: echo "🍏 This job's status is ${{ job.status }}."
       - run: echo "${{ github.ref }}"
       - run: echo "${{ github.repositoryUrl }}"
-      - name: Do Comment
+      - name: Run Command
         run: |
-          gh issue comment 1 --body "Hi from GitHub CLI"
+          echo '{"key": 1, "key2": "value"}' > vet-failures.json
+          false
+      - name: Report Failure
+        run: |
+          vet-failures.json | gh issue comment 1 
 
       
