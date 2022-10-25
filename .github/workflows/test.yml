@@ -26,7 +26,8 @@ jobs:
         run: |
           echo '{"key": 1, "key2": "value"}' > vet-failures.json
           false
-      - name: Report Failure
+      - if: ${{ failure() }}
+        name: Report Failure
         run: |
           vet-failures.json | gh issue comment 1 
 
