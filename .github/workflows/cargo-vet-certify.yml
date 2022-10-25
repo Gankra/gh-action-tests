@@ -17,6 +17,7 @@ jobs:
     - id: fetch-audits
       run: |
         audits=$(cat ${{ env.EXAMPLE_AUDITS }})
+        echo $audits
 
 
   cargo-vet-certify:
@@ -32,6 +33,10 @@ jobs:
       VET_RESULTS_FILE: vet-results.json
       VET_RESULTS_FILE_FINAL: vet-results-final.json
     steps:
+    - name: Log Audits
+      run: |
+        echo "certifying with these audits:"
+        echo ${{ needs.get-audits.outputs.audits }}
     - uses: actions/checkout@master
     - name: Install Rust
       run: rustup update stable && rustup default stable
