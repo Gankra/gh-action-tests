@@ -65,5 +65,15 @@ jobs:
           message="cargo-vet needs you to audit your dependencies, visit $view_url"
           echo "posting comment:"
           echo $message | gh pr comment ${{ github.event.pull_request.number }} --body-file -
+      - if: ${{ failure() && github.event.pull_request.number }}
+        name: Mock Certify Response
+        description: 'pretend someone submitted a certify'
+        inputs:
+          certs:  # id of input
+            package: "blah"
+        runs:
+          using: 'node16'
+          main: 'certify.js'
+
           
 
