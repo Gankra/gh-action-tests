@@ -31,7 +31,7 @@ jobs:
       #  # Currently patching in a fork
       #  run: cargo install --root ${{ runner.tool_cache }}/cargo-vet --version ${{ env.CARGO_VET_VERSION }} --git https://github.com/Gankra/cargo-vet --branch bots cargo-vet
       - name: Hello world action step
-        uses: ./certify/
+        uses: ./.github/workflows/certify
         id: uhhh
         with:
           audits: '[{"x": "y", "z": 2}]'
