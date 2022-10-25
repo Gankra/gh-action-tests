@@ -1,10 +1,9 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Vet Dependencies
 on: 
   # push:
   pull_request:
 jobs:
-  cargo-vet:
+  cargo-vet-check:
       name: Vet Dependencies
       runs-on: ubuntu-latest
       env:
@@ -40,4 +39,3 @@ jobs:
           cat vet-results-final.json | curl -X POST --data @- https://cargo-vet.axo.dev/api/webhooks/receive
           
 
-      
