@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@master
     - id: fetch-audits
       run: |
-        audits=$(cat ${{ env.EXAMPLE_AUDITS }}) | jq -c .
+        audits=$(cat ${{ env.EXAMPLE_AUDITS }} | jq -c .)
         echo $audits
         echo "audits=$audits" >> $GITHUB_OUTPUT
 
