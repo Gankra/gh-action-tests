@@ -1,9 +1,6 @@
 name: Certify Dependencies
 on: 
-  push:
-    branches:
-    - main
-  # pull_request:
+  workflow_dispatch:
 jobs:
   get-audits:
     name: "Get Audits"
