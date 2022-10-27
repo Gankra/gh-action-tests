@@ -6,7 +6,7 @@ on:
         description: "PR#"
         required: true
 jobs:
-  cargo-vet-certify:
+  edit-pr:
     name: Vet Dependencies
     runs-on: ubuntu-latest
     env:
