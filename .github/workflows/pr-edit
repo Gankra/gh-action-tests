@@ -1,0 +1,20 @@
+name: Edit PR
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR#"
+        required: true
+jobs:
+  cargo-vet-certify:
+    name: Vet Dependencies
+    runs-on: ubuntu-latest
+    env:
+      # Token required to submit comments on failed PRs
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/checkout@master
+    - name: edit pr
+      run: |
+        gh pr show ${{ inputs.pr }}
+        
