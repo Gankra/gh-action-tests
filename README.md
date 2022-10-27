@@ -1,2 +1,1 @@
-﻿# gh-action-tests
-asdas
+BETTER README
