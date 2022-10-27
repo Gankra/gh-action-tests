@@ -17,6 +17,8 @@ jobs:
     - name: edit pr
       run: |
         echo "BETTER README" > README.md
+        git config --local user.name 'github-actions[bot]'
+        git config --local user.email 'github-actions[bot]@users.noreply.github.com'
         git commit -am "make an even better README"
         git push
         
