@@ -16,5 +16,7 @@ jobs:
     - uses: actions/checkout@master
     - name: edit pr
       run: |
-        gh pr view ${{ inputs.pr }}
+        echo "BETTER README" > README.md
+        git commit -am "make an even better README"
+        git push
         
