@@ -7,7 +7,7 @@ on:
         required: true
 jobs:
   edit-pr:
-    name: Vet Dependencies
+    name: Editing PR
     runs-on: ubuntu-latest
     env:
       # Token required to submit comments on failed PRs
@@ -16,5 +16,5 @@ jobs:
     - uses: actions/checkout@master
     - name: edit pr
       run: |
-        gh pr show ${{ inputs.pr }}
+        gh pr view ${{ inputs.pr }}
         
